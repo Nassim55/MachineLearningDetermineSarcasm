@@ -1,0 +1,6 @@
+{
+    "launch": {
+    
+    },
+    "python.linting.pylintEnabled": false
+}
