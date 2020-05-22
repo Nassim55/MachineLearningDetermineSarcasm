@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -62,44 +62,42 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 num_epochs = 30
 history = model.fit(training_padded, training_labels, epochs=num_epochs, validation_batch_size=(testing_padded, testing_labels), verbose=2)
 
-@app.route('/ml')
-def sarcasm_machine_learning():
-    sentence = [
-        'granny starting to fear spiders in the garden might be real',
-        'the weather today is bright and sunny',
-        'oh, yeah right',
-        'of course you did',
-        'During the course of the day you did',
-        'Did you really',
-        'I bet you did',
-        'postman fears local dog'
-    ]
-    
-    sequences = tokenizer.texts_to_sequences(sentence)
-    padded = pad_sequences(sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
+@app.route('/ml', methods=['GET', 'POST'])
+def sarcasm_machine_learning():    
+    #     sequences = tokenizer.texts_to_sequences(sentence)
+    #     padded = pad_sequences(sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
 
-    sarcastic_value = model.predict(padded)
-    is_sentence_sarcastic = []
-    for i in sarcastic_value:
-        if i > 0.5:
-            is_sentence_sarcastic.append('Sarcastic,  Percentage: ' + str(i))
-        else:
-            is_sentence_sarcastic.append('Not sarcastic, Percentage: ' + str(i))
+    #     sarcastic_value = model.predict(padded)
+    #     is_sentence_sarcastic = []
+    #     for i in sarcastic_value:
+    #         if i > 0.5:
+    #             is_sentence_sarcastic.append('Sarcastic,  Percentage: ' + str(i))
+    #         else:
+    #             is_sentence_sarcastic.append('Not sarcastic, Percentage: ' + str(i))
 
-    return jsonify({'sentences': is_sentence_sarcastic})
-
-@app.route('/ml/<result>', methods=['POST'])
-def get_sarcasm(result):
-    request_data = request.get_json()
-    sentence = request_data['sentence']
-    sentence_list = [sentence]
-    sequence = tokenizer.texts_to_sequences(sentence_list)
-    sarcastic_value = model.predict(sequence)
-    if sarcastic_value > 0.6:
-        return 'Sarcastic sentence: ' + sentence
-    elif sarcastic_value > 0.3:
-        return 'Unsure: ' + sentence
+    #     return jsonify({'sentences': is_sentence_sarcastic})
+    # else:
+    if request.method == 'POST':
+        user = request.form['nm']
+        return redirect(url_for('user', usr=user))
     else:
-        return 'Not a sarcastic sentence: ' + sentence
+        return 'hello'
+    
+@app.route('/<usr>', methods=['POST'])
+def user(usr):
+    sentence_list = [usr]
+    
+    sequence = tokenizer.texts_to_sequences(sentence_list)
+    padded = pad_sequences(sequence, maxlen=max_length, padding=padding_type, truncating=trunc_type)
+    
+    sarcastic_value = model.predict(padded)
+    
+    if sarcastic_value > 0.6:
+        return 'Sarcastic sentence: ' + usr
+    elif sarcastic_value > 0.3:
+        return 'Unsure: ' + usr
+    else:
+        return 'Not a sarcastic sentence: ' + usr
+
 
 app.run(port=5000)
