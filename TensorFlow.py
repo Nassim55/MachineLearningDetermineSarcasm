@@ -66,25 +66,22 @@ history = model.fit(training_padded, training_labels, epochs=num_epochs, validat
 def sarcasm_machine_learning():    
     if request.method == 'POST':
         user = request.form['nm']
-        return redirect(url_for('user', usr=user))
+        return redirect(url_for('user', user_input_sentence=user))
     else:
         return 'hello'
     
-@app.route('/<usr>', methods=['POST'])
-def user(usr):
-    sentence_list = [usr]
-    
+@app.route('/<user_input_sentence>', methods=['POST'])
+def user(user_input_sentence):
+    sentence_list = [user_input_sentence]
     sequence = tokenizer.texts_to_sequences(sentence_list)
     padded = pad_sequences(sequence, maxlen=max_length, padding=padding_type, truncating=trunc_type)
-    
     sarcastic_value = model.predict(padded)
-    
     if sarcastic_value > 0.6:
-        return 'Sarcastic sentence: ' + usr
+        return 'Sarcastic sentence: ' + user_input_sentence
     elif sarcastic_value > 0.3:
-        return 'Unsure: ' + usr
+        return 'Unsure: ' + user_input_sentence
     else:
-        return 'Not a sarcastic sentence: ' + usr
+        return 'Not a sarcastic sentence: ' + user_input_sentence
 
 
 app.run(port=5000)
