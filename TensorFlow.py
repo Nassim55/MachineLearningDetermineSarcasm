@@ -64,19 +64,6 @@ history = model.fit(training_padded, training_labels, epochs=num_epochs, validat
 
 @app.route('/ml', methods=['GET', 'POST'])
 def sarcasm_machine_learning():    
-    #     sequences = tokenizer.texts_to_sequences(sentence)
-    #     padded = pad_sequences(sequences, maxlen=max_length, padding=padding_type, truncating=trunc_type)
-
-    #     sarcastic_value = model.predict(padded)
-    #     is_sentence_sarcastic = []
-    #     for i in sarcastic_value:
-    #         if i > 0.5:
-    #             is_sentence_sarcastic.append('Sarcastic,  Percentage: ' + str(i))
-    #         else:
-    #             is_sentence_sarcastic.append('Not sarcastic, Percentage: ' + str(i))
-
-    #     return jsonify({'sentences': is_sentence_sarcastic})
-    # else:
     if request.method == 'POST':
         user = request.form['nm']
         return redirect(url_for('user', usr=user))
