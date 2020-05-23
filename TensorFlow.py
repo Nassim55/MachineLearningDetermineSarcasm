@@ -7,9 +7,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from flask import Flask, jsonify, request, redirect, url_for
 from settings import *
-
-#app = Flask(__name__)
-
+from DataModel import *
 
 vocab_size = 10000
 embedding_dim = 16
@@ -19,10 +17,7 @@ padding_type = 'post'
 oov_tok = "<OOV>"
 training_size = 20000
 
-with open('Sarcasm_Headlines_Dataset.json', 'r') as f:
-    datastore = json.loads("[" + 
-        f.read().replace("}\n{", "},\n{") + 
-    "]")
+datastore = MachineLearningData.get_all_data()
 
 sentences = []
 labels = []
@@ -82,6 +77,10 @@ def sarcasm_machine_learning():
             return jsonify({'isSarcastic': return_value})
     else:
         return jsonify({'isSarcastic': ''})
+
+@app.route('/test')
+def get_json_test():
+    return jsonify({'data': MachineLearningData.get_all_data()})
 
 
 app.run(port=5000)
