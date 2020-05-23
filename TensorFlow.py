@@ -6,8 +6,9 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from flask import Flask, jsonify, request, redirect, url_for
+from settings import *
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 
 vocab_size = 10000
@@ -59,7 +60,7 @@ model = tf.keras.Sequential([
 ])
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-num_epochs = 100
+num_epochs = 30
 history = model.fit(training_padded, training_labels, epochs=num_epochs, validation_batch_size=(testing_padded, testing_labels), verbose=2)
 
 @app.route('/ml', methods=['GET', 'POST'])
