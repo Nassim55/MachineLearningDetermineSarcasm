@@ -59,7 +59,7 @@ model = tf.keras.Sequential([
 ])
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-num_epochs = 30
+num_epochs = 100
 history = model.fit(training_padded, training_labels, epochs=num_epochs, validation_batch_size=(testing_padded, testing_labels), verbose=2)
 
 @app.route('/ml', methods=['GET', 'POST'])
@@ -80,7 +80,7 @@ def sarcasm_machine_learning():
             return_value = 'Not Sarcastic'
             return jsonify({'isSarcastic': return_value})
     else:
-        return jsonify({'isSarcastic': 'Not Sarcastic'})
+        return jsonify({'isSarcastic': ''})
 
 
 app.run(port=5000)
