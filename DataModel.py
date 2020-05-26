@@ -2,7 +2,7 @@ import json
 import pandas as pd
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine 
+from sqlalchemy import create_engine
 from settings import app
 
 db = SQLAlchemy(app)

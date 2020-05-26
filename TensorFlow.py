@@ -66,10 +66,10 @@ def sarcasm_machine_learning():
         sequence = tokenizer.texts_to_sequences(sentence_list)
         padded = pad_sequences(sequence, maxlen=max_length, padding=padding_type, truncating=trunc_type)
         sarcastic_value = model.predict(padded)
-        if sarcastic_value > 0.8:
+        if sarcastic_value > 0.4:
             return_value = 'Sarcastic'
             return jsonify({'isSarcastic': return_value})
-        elif sarcastic_value > 0.2:
+        elif sarcastic_value > 0.08:
             return_value = 'Unsure'
             return jsonify({'isSarcastic': return_value})
         else:
