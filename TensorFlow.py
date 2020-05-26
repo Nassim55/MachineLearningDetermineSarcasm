@@ -15,7 +15,8 @@ max_length = 100
 trunc_type = 'post'
 padding_type = 'post'
 oov_tok = "<OOV>"
-training_size = 20000
+data_size = 1037535
+training_size = 800000
 
 datastore = MachineLearningData.get_all_data()
 
@@ -24,6 +25,9 @@ labels = []
 for item in datastore:
     sentences.append(item['headline'])
     labels.append(item['is_sarcastic'])
+for i in sentences:
+     if not isinstance(i, str):
+         sentences.remove(i)
 
 training_sentences = sentences[0:training_size]
 testing_sentences = sentences[training_size:]
@@ -66,10 +70,10 @@ def sarcasm_machine_learning():
         sequence = tokenizer.texts_to_sequences(sentence_list)
         padded = pad_sequences(sequence, maxlen=max_length, padding=padding_type, truncating=trunc_type)
         sarcastic_value = model.predict(padded)
-        if sarcastic_value > 0.4:
+        if sarcastic_value > 0.8:
             return_value = 'Sarcastic'
             return jsonify({'isSarcastic': return_value})
-        elif sarcastic_value > 0.08:
+        elif sarcastic_value > 0.5:
             return_value = 'Unsure'
             return jsonify({'isSarcastic': return_value})
         else:
